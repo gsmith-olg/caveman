@@ -62,6 +62,8 @@ Nothing of value died in the second answer. The diagnosis survived, the fix surv
 
 Code, commands, file paths, and exact error messages never get cavemanned. Only the prose around them does.
 
+Want to run that comparison yourself instead of trusting a screenshot? [`examples/forge-caveman-demo`](./examples/forge-caveman-demo) is a working, live demo: it calls a real model twice — once normal, once with Caveman mode's system rules on — and prints both answers with the token diff.
+
 ## Install
 
 Caveman comes in two sizes.
