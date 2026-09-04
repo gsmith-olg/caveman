@@ -15,6 +15,8 @@ this repository. Hosted-service implementation details are outside its scope.
   contracts
 - [Configuration](./technical/configuration.md): capability keys, local files,
   environment variables, and precedence
+- [CavemanTalk](./CavemanTalk.md): side-by-side examples of Caveman mode
+  answering the same question, normal vs. terse
 
 ## Runtime
 
