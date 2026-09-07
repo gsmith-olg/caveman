@@ -29,6 +29,10 @@ Works in any Chromium browser (Chrome, Edge, Brave, Arc). No build step.
   submits — the AI's replies come back terse.
 - The on-page flame pill shows it's active; click it to turn off (or say
   `stop caveman` in chat).
+- Every control in the popup persists itself the moment you change it; the
+  **Save** button is there for a visible confirmation — click it and it shows
+  "Saved" once your current on/off, intensity, and per-site choices are
+  written to `chrome.storage.sync`.
 
 ## How it works
 

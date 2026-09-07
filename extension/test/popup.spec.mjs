@@ -88,3 +88,42 @@ test("popup file-preview fallback uses localStorage and safe generic review URL"
     level: "lite",
   });
 });
+
+test("Save button confirms the current settings were written to storage", async ({ page }) => {
+  await page.addInitScript(() => {
+    const store = { enabled: true, level: "full", sites: {} };
+    window.__cavemanPopupStore = store;
+    window.chrome = {
+      runtime: { id: "fixture-extension-id" },
+      storage: {
+        sync: {
+          get(defaults, callback) {
+            const value = {};
+            for (const key in defaults) value[key] = key in store ? store[key] : defaults[key];
+            queueMicrotask(() => callback(value));
+          },
+          set(value, callback) {
+            Object.assign(store, value);
+            queueMicrotask(() => callback?.());
+          },
+        },
+      },
+    };
+  });
+  await routePopup(page);
+  await page.goto("https://extension.fixture/popup.html");
+
+  await expect(page.locator("#saveStatus")).not.toHaveClass(/visible/);
+
+  await page.locator('label:has(input[name="level"][value="lite"]) span').click();
+  await page.locator('label:has(input[data-site="chatgpt.com"]) span').click();
+  await page.locator("#save").click();
+
+  await expect(page.locator("#saveStatus")).toHaveClass(/visible/);
+  await expect(page.locator("#saveStatus")).toHaveText("Saved");
+  await expect.poll(() => page.evaluate(() => window.__cavemanPopupStore)).toEqual({
+    enabled: true,
+    level: "lite",
+    sites: { "chatgpt.com": false },
+  });
+});

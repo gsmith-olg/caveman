@@ -87,6 +87,30 @@ document.querySelectorAll("input[data-site]").forEach((c) => {
 
 document.getElementById("brand").addEventListener("click", (e) => e.preventDefault());
 
+// ── explicit Save ─────────────────────────────────────────────────────────
+// Every control above already persists itself the moment it changes, so this
+// button never leaves anything unsaved — it exists to give a clear, visible
+// confirmation that the current on/off, intensity, and per-site choices are
+// safely in `chrome.storage.sync`, for anyone who wants to double-check before
+// closing the popup.
+let saveStatusTimer = null;
+document.getElementById("save").addEventListener("click", () => {
+  const sites = {};
+  document.querySelectorAll("input[data-site]").forEach((c) => {
+    sites[c.dataset.site] = c.checked;
+  });
+  const level = document.querySelector('input[name="level"]:checked')?.value || "full";
+  const enabled = document.getElementById("master").checked;
+
+  store.set({ enabled, level, sites }, () => {
+    const status = document.getElementById("saveStatus");
+    status.textContent = "Saved";
+    status.classList.add("visible");
+    clearTimeout(saveStatusTimer);
+    saveStatusTimer = setTimeout(() => status.classList.remove("visible"), 1500);
+  });
+});
+
 // Review CTA → the Chrome Web Store reviews tab for THIS install. The id is read
 // from chrome.runtime at runtime (in a published install it is the store id), so
 // there is no hardcoded extension id to drift; the file:// preview shim falls
